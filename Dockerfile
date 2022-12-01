@@ -1,4 +1,4 @@
-FROM node:16 as base
+FROM node:8
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -8,24 +8,12 @@ WORKDIR /usr/src/app
 # where available (npm@5+)
 COPY package*.json ./
 
-EXPOSE 5000
-
-#code for production
-FROM base as production
-ENV NODE_ENV=production
-RUN npm ci --only=production
+RUN npm install
 # If you are building your code for production
 # RUN npm ci --only=production
 
 # Bundle app source
 COPY . .
-CMD [ "node", "server.js" ]
 
-#code for development
-FROM base as dev
-ENV NODE_ENV=development
-RUN npm install -g nodemon && npm install
-
-# Bundle app source
-COPY . .
-CMD [ "nodemon", "server.js" ]
+EXPOSE 3000
+CMD [ "npm", "start" ]
